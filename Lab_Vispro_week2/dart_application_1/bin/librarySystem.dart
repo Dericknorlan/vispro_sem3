@@ -1,3 +1,5 @@
+import 'dart:io';
+
 class Book {
   String title;
   String author;
@@ -11,15 +13,25 @@ class Book {
 }
 
 class Library {
-  List<Book> books = []; 
+  List<Book> books = [];
+
   void addBook(Book book) {
     books.add(book);
     print('Added: ${book.display()}');
   }
 
   void removeBook(String title) {
+    // Attempt to find the book by title
+    int initialLength = books.length;
+    
     books.removeWhere((book) => book.title == title);
-    print('Removed book: "$title"');
+
+    // Check if a book was removed by comparing the length of the list
+    if (books.length < initialLength) {
+      print('Removed book: "$title"');
+    } else {
+      print('Book with title "$title" not found in the library.');
+    }
   }
 
   void displayBooks() {
@@ -28,7 +40,7 @@ class Library {
     } else {
       print('Books in the library:');
       for (var book in books) {
-        print(book.display()); 
+        print(book.display());
       }
     }
   }
@@ -37,17 +49,26 @@ class Library {
 void main() {
   Library library = Library();
 
+  // Creating some book instances
   Book book1 = Book('saya', 'Orwell', 2000);
   Book book2 = Book('burung', 'Lee', 1960);
-  Book book3 = Book('makan', 'scott', 3000);
+  Book book3 = Book('makan', 'Scott', 3000);
 
+  // Adding books to the library
   library.addBook(book1);
   library.addBook(book2);
   library.addBook(book3);
 
+  // Displaying all books in the library
   library.displayBooks();
 
-  library.removeBook('saya');
+  // Asking user for the title of the book to remove
+  stdout.write('Enter the title of the book you want to remove: ');
+  String titleToRemove = stdin.readLineSync()!.trim();
 
+  // Removing the book based on user input
+  library.removeBook(titleToRemove);
+
+  // Displaying all books after removal
   library.displayBooks();
 }
