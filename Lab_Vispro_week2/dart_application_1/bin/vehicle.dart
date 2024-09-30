@@ -8,7 +8,19 @@ class Vehicle {
 
   // Method to describe how the vehicle moves
   void move() {
-    print('$name moves at $speed km/h');
+    String speedDescription = describeSpeed(speed);
+    print('$name $speedDescription at $speed km/h.');
+  }
+
+  // Function to describe speed category
+  String describeSpeed(double speed) {
+    if (speed > 60) {
+      return 'moves fast';
+    } else if (speed < 30) {
+      return 'moves slow';
+    } else {
+      return 'moves at a normal speed';
+    }
   }
 }
 
@@ -17,7 +29,8 @@ class Car extends Vehicle {
 
   @override
   void move() {
-    print('$name moves fast on roads at $speed km/h.');
+    String speedDescription = describeSpeed(speed);
+    print('$name $speedDescription on roads at $speed km/h.');
   }
 }
 
@@ -26,7 +39,8 @@ class Bike extends Vehicle {
 
   @override
   void move() {
-    print('$name moves swiftly through traffic at $speed km/h.');
+    String speedDescription = describeSpeed(speed);
+    print('$name $speedDescription through traffic at $speed km/h.');
   }
 }
 
@@ -49,7 +63,7 @@ void main() {
   } else if (choice == 'bike') {
     vehicle = Bike(name, speed);
   } else {
-    print('Invalid choice. Please enter "Car" or "Bike": ');
+    print('Invalid choice. Please enter "Car" or "Bike".');
     return; // Exit the program if the choice is invalid
   }
 
