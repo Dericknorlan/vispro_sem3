@@ -78,7 +78,7 @@ void moveCursor(int x, int y) {
   stdout.write('\x1b[${y};${x}H');
 }
 
-// Function to display repeated ASCII letters centered and with animation from bottom to top
+// Function to display repeated ASCII letters with slow upward animation and stop at the center
 Future<void> animateAsciiArt(String text) async {
   List<String> lines = List.filled(5, ''); // Create 5 empty lines for ASCII art rows
 
@@ -96,15 +96,23 @@ Future<void> animateAsciiArt(String text) async {
   int height = stdout.terminalLines; // Current terminal height
   int width = stdout.terminalColumns; // Current terminal width
 
-  // Calculate target row to place the text at the middle of the screen
+  // Calculate the target row where the text should stop (center of the screen)
   int targetRow = (height ~/ 2) - (lines.length ~/ 2);
 
-  // Display text in the center
-  clearScreen();
-  for (int i = 0; i < lines.length; i++) {
-    // Center the text horizontally
-    int centerX = (width ~/ 2) - (lines[i].length ~/ 2);
-    moveCursor(centerX, targetRow + i); // Move cursor to center
-    stdout.writeln(lines[i]); // Write each line of ASCII art
+  // Start from the bottom of the terminal
+  int startRow = height - lines.length;
+
+  // Animate text from bottom to target row
+  for (int row = startRow; row >= targetRow; row--) {
+    clearScreen(); // Clear the screen before each frame
+
+    // Display the text row by row
+    for (int i = 0; i < lines.length; i++) {
+      int centerX = (width ~/ 2) - (lines[i].length ~/ 2); // Center horizontally
+      moveCursor(centerX, row + i); // Move cursor to new position
+      stdout.writeln(lines[i]); // Write each line of ASCII art
+    }
+
+    await Future.delayed(Duration(milliseconds: 100)); // Delay for animation effect
   }
 }
